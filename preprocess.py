@@ -52,6 +52,8 @@ if __name__ == "__main__":
 
     npz = np.load(input_path, encoding='latin1')
 
+    print('preprocessing', str(part))
+
     if part == "dev":
         np.savez(output_path, enrol=bulk_VAD(npz['enrol']), test=bulk_VAD(npz['test']), trials=npz['trials'],
                  labels=npz['labels'])
