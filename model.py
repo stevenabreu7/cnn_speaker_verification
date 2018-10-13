@@ -296,7 +296,7 @@ def main():
     net = make_network()
     
     # initialization
-    net.apply(nn.init.kaiming_normal_)
+    # net.apply(nn.init.kaiming_normal_)
 
     # training parameters
     optimizer = torch.optim.SGD(net.parameters(), nesterov=0.01, lr=0.01, weight_decay=0.01)
