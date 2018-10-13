@@ -299,7 +299,7 @@ def main():
     # net.apply(nn.init.kaiming_normal_)
 
     # training parameters
-    optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=0.01, dampening=0.01, lr=0.01, weight_decay=0.01)
+    optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=0.01, dampening=0, lr=0.01, weight_decay=0.01)
     scheduler = None
     criterion = nn.modules.loss.CrossEntropyLoss()
 
