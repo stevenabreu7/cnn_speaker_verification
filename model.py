@@ -63,7 +63,7 @@ def load_data(parts, max_length):
     print('Loading training dataset..')
     train_dataset = TrainDataset('dataset', parts, max_length)
     print('Loading validation dataset..')
-    val_dataset = ValDataset('dataset', max_length)
+    val_dataset = ValDataset('dataset/dev.preprocessed.npz', max_length)
     return train_dataset, val_dataset
 
 class Trainer:
