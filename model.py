@@ -12,7 +12,7 @@ from utils import train_load, dev_load, test_load, EER
 
 def fixed_length(array, max_length):
     x = []
-    for i in array.shape[0]:
+    for i in range(array.shape[0]):
         if array[i].shape[0] >= max_length:
             # too long, we slice
             a = randrange(array[i].shape[0] - max_length + 1)
