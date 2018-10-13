@@ -34,6 +34,9 @@ class TrainDataset(Dataset):
         # data and target
         self.data = fixed_length(features, max_length)
         self.labels = speakers
+        # save as tensors
+        self.data = torch.Tensor(self.data)
+        self.labels = torch.Tensor(self.labels)
         # number of speakers, number of data points
         self._nspeak = nspeakers
         self._len = self.data.shape[0]
