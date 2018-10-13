@@ -277,7 +277,7 @@ def make_network():
         nn.AvgPool2d(6),
         Flatten()
     ]
-    return nn.Sequential(layers)
+    return nn.Sequential(*layers)
 
 def main():
     # parameters
