@@ -32,6 +32,7 @@ class Resnet(nn.Module):
         self.FRAMES = frames
         # first layer
         self.conv1 = nn.Conv2d(1, 32, 5, stride=2, padding=0, bias=False)
+        nn.init.kaiming_normal_(self.conv1.weight)
         self.elu1 = nn.ELU()
         # residual
         self.res_conv1_1 = nn.Conv2d(32, 32, 3, stride=1, padding=1, bias=False)
