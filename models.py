@@ -76,6 +76,7 @@ class Resnet(nn.Module):
         self.final = nn.Linear(256, self.CLASSES, bias=True)
     
     def forward(self, x):
+        print('Input to forward pass:', x.size())
         # first layer
         x = self.conv1(x)
         x = self.elu1(x)
