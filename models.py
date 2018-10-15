@@ -135,6 +135,7 @@ class Resnet(nn.Module):
         x = self.res_elu4_2(x)
         # final pooling and normalizing
         print('Dimensions before pooling:', x.size())
+        self.FRAMES = x.size()[2]
         x = self.pool(x)
         x = torch.squeeze(x)
         x = F.normalize(x, p=2, dim=1)
