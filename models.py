@@ -77,6 +77,7 @@ class Resnet(nn.Module):
     
     def forward(self, x):
         print('Input to forward pass:', x.size())
+        x = x.view((-1,-1,1,-1))
         # first layer
         x = self.conv1(x)
         x = self.elu1(x)
