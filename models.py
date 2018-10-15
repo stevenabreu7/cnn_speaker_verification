@@ -76,12 +76,13 @@ class Resnet(nn.Module):
         self.final = nn.Linear(256, self.CLASSES, bias=True)
     
     def forward(self, x):
-        print('Input to forward pass:', x.size())
         x = x.unsqueeze(1)
         # first layer
+        print('Dimensions before 1st layer:', x.size())
         x = self.conv1(x)
         x = self.elu1(x)
         # residual
+        print('Dimensions before 1st res:', x.size())
         save = x
         x = self.res_conv1_1(x)
         x = self.res_bn1_1(x)
@@ -91,9 +92,11 @@ class Resnet(nn.Module):
         x = save + x
         x = self.res_elu1_2(x)
         # second layer
+        print('Dimensions before 2nd layer:', x.size())
         x = self.conv2(x)
         x = self.elu2(x)
         # residual
+        print('Dimensions before 2nd res:', x.size())
         save = x
         x = self.res_conv2_1(x)
         x = self.res_bn2_1(x)
@@ -103,9 +106,11 @@ class Resnet(nn.Module):
         x = save + x
         x = self.res_elu2_2(x)
         # third layer
+        print('Dimensions before 3rd layer:', x.size())
         x = self.conv3(x)
         x = self.elu3(x)
         # residual
+        print('Dimensions before 3rd res:', x.size())
         save = x
         x = self.res_conv3_1(x)
         x = self.res_bn3_1(x)
@@ -115,9 +120,11 @@ class Resnet(nn.Module):
         x = save + x
         x = self.res_elu3_2(x)
         # fourth layer
+        print('Dimensions before 4th layer:', x.size())
         x = self.conv4(x)
         x = self.elu4(x)
         # residual
+        print('Dimensions before 4th res:', x.size())
         save = x
         x = self.res_conv4_1(x)
         x = self.res_bn4_1(x)

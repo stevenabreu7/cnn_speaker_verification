@@ -241,7 +241,7 @@ def main():
     net = models.Resnet(train_dataset._nspeak, alpha=16, frames=max_length)
     
     # initialization
-    # net.apply(nn.init.kaiming_normal_)
+    net.apply(nn.init.kaiming_normal_)
 
     # training parameters
     optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=0.01, dampening=0, lr=0.01, weight_decay=0.01)
