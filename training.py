@@ -238,7 +238,7 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=batch_size, sampler=RandomSampler(val_dataset))
 
     # model
-    net = models.make_network()
+    net = models.Resnet(train_dataset._nspeak, alpha=16, frames=max_length)
     
     # initialization
     net.apply(nn.init.kaiming_normal_)
@@ -249,7 +249,7 @@ def main():
     criterion = nn.modules.loss.CrossEntropyLoss()
 
     # initialize trainer
-    trainer = Trainer(train_loader, val_loader, 'first_try', net, optimizer, criterion, scheduler)
+    trainer = Trainer(train_loader, val_loader, 'resnet', net, optimizer, criterion, scheduler)
 
     # run the training
     trainer.train(epochs)

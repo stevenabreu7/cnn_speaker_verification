@@ -1,67 +1,8 @@
+import torch 
 import torch.nn as nn
 import torch.nn.functional as F
 
-class Flatten(nn.Module):
-    """
-    Implementing a simple custom module that reshapes (n, m, 1, 1) tensors to (n, m).
-    """
-    def __init__(self):
-        super(Flatten, self).__init__()
-
-    def forward(self, x):
-        a, b = list(x.size())[:2]
-        return x.view(a, b)
-
-def make_network():
-    """Network
-    All operations are 2D (frames x features), one channel.
-    - Conv 5x5, 32 output channels, stride 2, padding 0
-    - residual block
-    - Conv 5x5, 64 output channels, stride 2, padding 0
-    - residual block
-    - Conv 5x5, 128 output channels, stride 2, padding 0
-    - residual block
-    - Conv 5x5, 256 output channels, stride 2, padding 0
-    - residual block
-    - Avg Pool, 6x6
-    - Flatten
-    residual block:
-    - conv 3x3, stride 1, padding 1
-    - batchnorm (disabled for now)
-    - ELU
-    - conv 3x3, stride 1, padding 1
-    - batchnorm
-    - ELU
-    """
-    def residual_block(channels):
-        return [
-            nn.Conv2d(channels, channels, 3, stride=1, padding=1, bias=False),
-            nn.BatchNorm2d(channels),
-            nn.ELU(), 
-            nn.Conv2d(channels, channels, 3, stride=1, padding=1, bias=False),
-            nn.BatchNorm2d(channels),
-            nn.ELU()
-        ]
-    
-    layers = [
-        nn.Conv2d(1, 32, 5, stride=2, padding=0, bias=False),
-        nn.ELU(),
-        *residual_block(32),
-        nn.Conv2d(32, 64, 5, stride=2, padding=0, bias=False),
-        nn.ELU(),
-        *residual_block(64),
-        nn.Conv2d(64, 128, 5, stride=2, padding=0, bias=False),
-        nn.ELU(),
-        *residual_block(128),
-        nn.Conv2d(128, 256, 5, stride=2, padding=0, bias=False),
-        nn.ELU(),
-        *residual_block(256),
-        nn.AvgPool2d(6),
-        Flatten()
-    ]
-    return nn.Sequential(*layers)
-
-class MyNetwork(nn.Module):
+class Resnet(nn.Module):
     """Network
     All operations are 2D (frames x features), one channel.
     - Conv 5x5, 32 output channels, stride 2, padding 0
@@ -83,10 +24,12 @@ class MyNetwork(nn.Module):
     - batchnorm
     - ELU
     """
-    def __init__(self):
+    def __init__(self, classes, alpha=16, frames=14000):
         super(MyNetwork, self).__init__()
         # constants
-        self.ALPHA = 16
+        self.CLASSES = classes
+        self.ALPHA = alpha
+        self.FRAMES = frames
         # first layer
         self.conv1 = nn.Conv2d(1, 32, 5, stride=2, padding=0, bias=False)
         self.elu1 = nn.ELU()
@@ -128,8 +71,8 @@ class MyNetwork(nn.Module):
         self.res_bn4_2 = nn.BatchNorm2d(256)
         self.res_elu4_2 = nn.ELU()
         # final pooling and length normalizing
-        self.pool = nn.AvgPool2d(6)
-        # self.len_norm = 
+        self.pool = nn.AvgPool2d(kernel_size=(self.FRAMES, 1), stride=1)
+        self.final = nn.Linear(256, self.CLASSES, bias=True)
     
     def forward(self, x):
         # first layer
@@ -182,7 +125,9 @@ class MyNetwork(nn.Module):
         x = self.res_elu4_2(x)
         # final pooling and normalizing
         x = self.pool(x)
+        x = torch.squeeze(x)
         x = F.normalize(x, p=2, dim=1)
         x *= self.ALPHA
         # done
+        x = self.final(x)
         return x
