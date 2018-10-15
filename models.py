@@ -25,7 +25,7 @@ class Resnet(nn.Module):
     - ELU
     """
     def __init__(self, classes, alpha=16, frames=14000):
-        super(MyNetwork, self).__init__()
+        super(Resnet, self).__init__()
         # constants
         self.CLASSES = classes
         self.ALPHA = alpha
