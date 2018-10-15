@@ -2,8 +2,10 @@
 This model assumes preprocessing to be done already.
 """
 import torch 
+import models
 import numpy as np
 import torch.nn as nn
+import torch.nn.functional as F
 from random import randrange
 from torch.utils.data import Dataset, DataLoader, RandomSampler
 from torch.autograd.variable import Variable
@@ -222,66 +224,6 @@ class Trainer:
         # move network back to CPU if needed
         self.net = self.net.cpu() if self.gpu else self.net 
 
-class Flatten(nn.Module):
-    """
-    Implementing a simple custom module that reshapes (n, m, 1, 1) tensors to (n, m).
-    """
-    def __init__(self):
-        super(Flatten, self).__init__()
-
-    def forward(self, x):
-        a, b = list(x.size())[:2]
-        return x.view(a, b)
-
-def make_network():
-    """Network
-    All operations are 2D (frames x features), one channel.
-    - Conv 5x5, 32 output channels, stride 2, padding 0
-    - residual block
-    - Conv 5x5, 64 output channels, stride 2, padding 0
-    - residual block
-    - Conv 5x5, 128 output channels, stride 2, padding 0
-    - residual block
-    - Conv 5x5, 256 output channels, stride 2, padding 0
-    - residual block
-    - Avg Pool, 6x6
-    - Flatten
-    residual block:
-    - conv 3x3, stride 1, padding 1
-    - batchnorm (disabled for now)
-    - ELU
-    - conv 3x3, stride 1, padding 1
-    - batchnorm
-    - ELU
-    """
-    def residual_block(channels):
-        return [
-            nn.Conv2d(channels, channels, 3, stride=1, padding=1, bias=False),
-            # nn.BatchNorm2d(),
-            nn.ELU(), 
-            nn.Conv2d(channels, channels, 3, stride=1, padding=1, bias=False),
-            # nn.BatchNorm2d(),
-            nn.ELU()
-        ]
-    
-    layers = [
-        nn.Conv2d(1, 32, 5, stride=2, padding=0, bias=False),
-        nn.ELU(),
-        *residual_block(32),
-        nn.Conv2d(32, 64, 5, stride=2, padding=0, bias=False),
-        nn.ELU(),
-        *residual_block(64),
-        nn.Conv2d(64, 128, 5, stride=2, padding=0, bias=False),
-        nn.ELU(),
-        *residual_block(128),
-        nn.Conv2d(128, 256, 5, stride=2, padding=0, bias=False),
-        nn.ELU(),
-        *residual_block(256),
-        nn.AvgPool2d(6),
-        Flatten()
-    ]
-    return nn.Sequential(*layers)
-
 def main():
     # parameters
     max_length = 14000
@@ -296,10 +238,10 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=batch_size, sampler=RandomSampler(val_dataset))
 
     # model
-    net = make_network()
+    net = models.make_network()
     
     # initialization
-    # net.apply(nn.init.kaiming_normal_)
+    net.apply(nn.init.kaiming_normal_)
 
     # training parameters
     optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=0.01, dampening=0, lr=0.01, weight_decay=0.01)
