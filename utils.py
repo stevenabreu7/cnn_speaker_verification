@@ -21,7 +21,7 @@ def train_load(path, parts):
     speakers = []
 
     for i in range(len(parts)):
-        print('\rLoading part {:}/{:} of training data'.format(i+1, len(parts)))
+        print('\rLoading part {:}/{:} of training data'.format(i+1, len(parts)), end='')
         p = parts[i]
         npz = np.load(os.path.join(path, str(p) + ".preprocessed.npz"), encoding='latin1')
 
