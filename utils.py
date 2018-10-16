@@ -48,10 +48,12 @@ def dev_load(path):
 
     assert '.preprocessed.npz' in path
 
+    print('\rLoading validation data', end='')
+
     data = np.load(path, encoding='latin1')
     enrol, test = data['enrol'], data['test']
 
-    print("Loaded validation data.")
+    print("\rSuccessfully loaded validation data.")
 
     return data['trials'], data['labels'], enrol, test
 

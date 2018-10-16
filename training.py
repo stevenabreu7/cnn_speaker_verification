@@ -52,7 +52,6 @@ class ValDataset(Dataset):
 
 class Trainer:
     def __init__(self, train_loader, val_loader, name, net, optimizer, criterion, scheduler):
-        print('Loading Trainer class for {}. '.format(name))
         # save the loaders
         self.update_data(train_loader, val_loader)
         # update training model
@@ -78,7 +77,7 @@ class Trainer:
         self.scheduler = scheduler
     
     def train(self, epochs):
-        print('Start training {}. # batches: {}'.format(self.name, len(self.train_loader)))
+        print('Start training {} in {} batches'.format(self.name, len(self.train_loader)))
 
         # move network to GPU if possible
         self.net = self.net.cuda() if self.gpu else self.net 
