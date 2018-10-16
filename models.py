@@ -88,44 +88,32 @@ class Resnet(nn.Module):
     def forward(self, x):
         x = x.unsqueeze(1)
         # first layer
-        print('Dimensions before 1st layer:', x.size())
         x = self.conv1(x)
         x = self.elu1(x)
         # residual
-        print('Dimensions before 1st res:', x.size())
         x = self.res1(x)
         # second layer
-        print('Dimensions before 2nd layer:', x.size())
         x = self.conv2(x)
         x = self.elu2(x)
         # residual
-        print('Dimensions before 2nd res:', x.size())
         x = self.res2(x)
         # third layer
-        print('Dimensions before 3rd layer:', x.size())
         x = self.conv3(x)
         x = self.elu3(x)
         # residual
-        print('Dimensions before 3rd res:', x.size())
         x = self.res3(x)
         # fourth layer
-        print('Dimensions before 4th layer:', x.size())
         x = self.conv4(x)
         x = self.elu4(x)
         # residual
-        print('Dimensions before 4th res:', x.size())
         x = self.res4(x)
         # final pooling and normalizing
-        print('Dimensions before pooling:', x.size())
         x = self.pool(x)
         x = torch.squeeze(x)
         x = F.normalize(x, p=2, dim=1)
         x *= self.ALPHA
         # flatten
-        print('Dimenstion before flatten:', x.size())
         x = self.flatten(x)
         # fully connected layer
-        print('Dimenstion before linear:', x.size())
         x = self.final(x)
-        print('Final dimensionality:', x.size())
         return x
