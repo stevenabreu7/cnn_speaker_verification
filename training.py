@@ -58,13 +58,15 @@ class ValDataset(Dataset):
         self.labels = labels
         self.X1 = torch.Tensor(self.X1)
         self.X2 = torch.Tensor(self.X2)
+        self.llabels = self.labels.astype(int)
+        self.llabels = torch.Tensor(self.llabels)
 
     def __len__(self):
         return self.trials.shape[0]
     
     def __getitem__(self, i):
         a, b = self.trials[i]
-        return (self.X1[a], self.X2[b]), self.labels[i]
+        return (self.X1[a], self.X2[b]), self.llabels[i]
 
 def load_data(parts, max_length):
     print('Loading training dataset..')
@@ -166,7 +168,7 @@ class Trainer:
             epoch_scores = []
 
             # validation
-            for batch_i, (batch_data, batch_labels) in enumerate(self.val_loader):
+            for batch_i, (batch_data, _) in enumerate(self.val_loader):
 
                 batch_data_a, batch_data_b = batch_data
 
@@ -194,7 +196,7 @@ class Trainer:
             epoch_scores = np.concatenate(epoch_scores, axis=0)
 
             # compute the EER
-            eer, tresh = EER(batch_labels, similarity_scores)
+            eer, tresh = EER(self.val_loader.labels, similarity_scores)
 
             print('\rValid {:3} EER {:7.4f} Tresh {:7.4f}'.format(
                 epoch + 1,
