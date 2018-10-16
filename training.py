@@ -97,7 +97,7 @@ class Trainer:
         self.scheduler = scheduler
     
     def train(self, epochs):
-        print('Start training {}.'.format(self.name))
+        print('Start training {}. # batches: {}'.format(self.name, len(self.train_loader)))
 
         # move network to GPU if possible
         self.net = self.net.cuda() if self.gpu else self.net 
@@ -142,10 +142,9 @@ class Trainer:
 
                 # print training progress
                 if batch_i % 10 == 0:
-                    print('\rEpoch {:3} Progress {:04}/{:04} Accuracy {:7.2%} Loss {:7.4f}'.format(
+                    print('\rEpoch {:3} Progress {:7.2%} Accuracy {:7.2%} Loss {:7.4f}'.format(
                         epoch + 1, 
-                        batch_i + 1,
-                        len(self.train_loader),
+                        (batch_i + 1) / len(self.train_loader),
                         train_correct / train_num,
                         train_loss / (batch_i + 1)
                     ), end='')
@@ -155,10 +154,9 @@ class Trainer:
             train_accuracy = train_correct / train_num
 
             # print summary for this epoch
-            print('\rEpoch {:3} Progress {:04}/{:04} Accuracy {:7.2%} Loss {:7.4f}'.format(
+            print('\rEpoch {:3} Progress {:7.2%} Accuracy {:7.2%} Loss {:7.4f}'.format(
                 epoch + 1, 
-                len(self.train_loader),
-                len(self.train_loader),
+                1,
                 train_accuracy,
                 train_loss
             ))
