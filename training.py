@@ -2,10 +2,11 @@
 This model assumes preprocessing to be done already.
 """
 import torch 
-import models
+import argparse
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
+from models import ResidualBlock, Resnet, Flatten
 from torch.utils.data import Dataset, DataLoader, RandomSampler
 from torch.autograd.variable import Variable
 
@@ -139,6 +140,15 @@ class Trainer:
                 train_loss
             ))
 
+            # save summary for this epoch to file
+            with open('models/{}_info.txt', 'a') as f:
+                f.write('Epoch {:3} Progress {:7.2%} Accuracy {:7.2%} Loss {:7.4f}\n'.format(
+                epoch + 1, 
+                1,
+                train_accuracy,
+                train_loss
+            ))
+
             # save model for this epoch
             torch.save(self.net, 'models/{}_{}'.format(self.name, epoch))
 
@@ -188,13 +198,93 @@ class Trainer:
         # move network back to CPU if needed
         self.net = self.net.cpu() if self.gpu else self.net 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+
+    # general arguments
+    parser.add_argument(
+        'name',
+        help='model name.')
+    parser.add_argument(
+        '--existing', 
+        nargs='?',
+        help='path to existing model to load.')
+    # data arguments
+    parser.add_argument(
+        '--maxlen', 
+        type=int,
+        default=14000,
+        help='maximum number of frames in speech.')
+    parser.add_argument(
+        '--bsize', 
+        type=int,
+        default=16,
+        help='Batch Size.')
+    parser.add_argument(
+        '--parts', 
+        type=int,
+        default=1,
+        help='how many parts of the training data to use (1-6).')
+    # learning arguments
+    parser.add_argument(
+        '--epochs',
+        type=int,
+        default=50,
+        help='number of epochs to run')
+    parser.add_argument(
+        '--momentum',
+        type=float,
+        default=0.01,
+        help='momentum for SGD')
+    parser.add_argument(
+        '--lr',
+        type=float,
+        default=0.01,
+        help='learning rate')
+    parser.add_argument(
+        '--wdecay',
+        type=float,
+        default=0.01,
+        help='weight decay')
+    return parser.parse_args()
+
+def save_model_info(args):
+    # save the model parameters to a file
+    info =  'Model name:    {}\n'.format(args.name)
+    info += 'Max length:    {}\n'.format(args.maxlen)
+    info += 'Batch size:    {}\n'.format(args.bsize)
+    info += 'Parts used:    {}\n'.format(args.parts)
+    info += 'Epochs:        {}\n'.format(args.epochs)
+    info += 'Learning rate: {}\n'.format(args.lr)
+    info += 'Weight decay:  {}\n'.format(args.wdecay)
+    info += 'Momentum:      {}\n'.format(args.momentum)
+    info += 'Existing:      {}'.format(args.existing)
+    with open('models/{}_info.txt'.format(args.name), 'w') as f:
+        f.write(info)
+
 def main():
-    # parameters
-    max_length = 14000
-    batch_size = 16
-    parts = [1]
-    epochs = 50
-    init_fn = nn.init.kaiming_normal_
+    # parse arguments from command line
+    args = parse_arguments()
+
+    # save model info to file
+    save_model_info(args)
+
+    # general parameters
+    name = args.name
+
+    # data parameters
+    max_length = args.maxlen
+    batch_size = args.bsize
+    parts = list(range(1, args.parts+1))
+    
+    # learning parameters
+    epochs = args.epochs
+    lr = args.lr
+    wdecay = args.wdecay
+    momentum = args.momentum 
+
+    # fixed parameter
+    init_fn = nn.init.kaiming_normal_  
 
     # datasets and loaders
     train_dataset = TrainDataset('dataset', parts, max_length)
@@ -203,24 +293,26 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=batch_size//2, sampler=RandomSampler(val_dataset))
 
     # model
-    net = models.Resnet(train_dataset._nspeak, alpha=16)
+    if args.existing:
+        net = torch.load(args.existing)
+    else:
+        net = Resnet(train_dataset._nspeak, alpha=16)
     
     # initialization
     for layer in net.children():
         if isinstance(layer, nn.Conv2d):
             init_fn(layer.weight)
-        elif isinstance(layer, models.ResidualBlock):
+        elif isinstance(layer, ResidualBlock):
             for llayer in layer.children():
                 if isinstance(llayer, nn.Conv2d):
                     init_fn(llayer.weight)
 
     # training parameters
-    optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=0.01, dampening=0, lr=0.01, weight_decay=0.01)
+    optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=momentum, dampening=0, lr=lr, weight_decay=wdecay)
     scheduler = None
     criterion = nn.modules.loss.CrossEntropyLoss()
 
     # initialize trainer
-    name = 'resnet'
     trainer = Trainer(train_loader, val_loader, name, net, optimizer, criterion, scheduler)
 
     # run the training
