@@ -23,6 +23,7 @@ class ResidualBlock(nn.Module):
     - ELU
     """
     def __init__(self, channels):
+        super(ResidualBlock, self).__init__()
         self.conv1 = nn.Conv2d(channels, channels, 3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(channels)
         self.elu1 = nn.ELU()
