@@ -173,6 +173,10 @@ class Trainer:
             epoch_scores = np.concatenate(epoch_scores, axis=0)
 
             # compute the EER
+            print(self.val_loader.dataset.labels)
+            print(similarity_scores)
+            print(self.val_loader.dataset.shape)
+            print(similarity_scores.shape)
             eer, tresh = EER(self.val_loader.dataset.labels, similarity_scores)
 
             print('\rValid {:3} EER {:7.4f} Tresh {:7.4f}'.format(
