@@ -84,7 +84,7 @@ class Resnet(nn.Module):
         # residual
         self.res4 = ResidualBlock(256)
         # final pooling and length normalizing
-        self.pool = nn.AvgPool2d(kernel_size=(self.FRAMES, 1), stride=1)
+        self.pool = nn.AvgPool2d(kernel_size=(872, 1), stride=1)
         self.flatten = Flatten()
         self.final = nn.Linear(256, self.CLASSES, bias=True)
     
