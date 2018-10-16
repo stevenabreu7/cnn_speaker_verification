@@ -177,7 +177,7 @@ class Trainer:
             print(epoch_scores)
             print(self.val_loader.dataset.labels.shape)
             print(epoch_scores.shape)
-            eer, tresh = EER(self.val_loader.dataset.labels, similarity_scores)
+            eer, tresh = EER(self.val_loader.dataset.labels, epoch_scores)
 
             print('\rValid {:3} EER {:7.4f} Tresh {:7.4f}'.format(
                 epoch + 1,
