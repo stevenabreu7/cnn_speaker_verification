@@ -60,6 +60,8 @@ class Trainer:
         # check GPU availability
         self.gpu = torch.cuda.is_available()
         print('Using GPU' if self.gpu else 'Not using GPU')
+        # validation
+        self.validate = False
     
     def save_model(self):
         torch.save(self.net.state_dict(), 'models/{}'.format(self.name))
@@ -152,9 +154,8 @@ class Trainer:
             # save model for this epoch
             torch.save(self.net, 'models/{}_{}'.format(self.name, epoch))
 
-            continue
-            # if epoch % 10 != 0 or epoch == 0:
-            #     continue
+            if not self.validate or epoch == 0 or epoch % 10 != 0:
+                continue
 
             epoch_scores = []
 
