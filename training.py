@@ -154,9 +154,10 @@ class Trainer:
             train_accuracy = train_correct / train_num
 
             # print summary for this epoch
-            print('\rEpoch {:3} finished.\t\t\t\nTraining Accuracy: {:5.2%}\nTraining Loss: {:10.7f}'.format(
+            print('\rEpoch {:3} Progress {:7.2%} Accuracy {:7.2%} Loss {:7.4f}'.format(
                 epoch + 1, 
-                train_accuracy, 
+                1,
+                train_accuracy,
                 train_loss
             ))
 
