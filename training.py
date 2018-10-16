@@ -10,25 +10,7 @@ from random import randrange
 from torch.utils.data import Dataset, DataLoader, RandomSampler
 from torch.autograd.variable import Variable
 
-from utils import train_load, dev_load, test_load, EER
-
-def fixed_length(array, max_length):
-    x = []
-    for i in range(array.shape[0]):
-        if array[i].shape[0] >= max_length:
-            # too long, we slice
-            a = randrange(array[i].shape[0] - max_length + 1)
-            b = a + max_length
-            sliced = array[i][a:b, :]
-            sliced = np.roll(sliced, randrange(max_length), axis=0)
-            x.append(sliced)
-        else:
-            # too short, we pad
-            pad_width = ((0, max_length - array[i].shape[0]), (0,0))
-            padded = np.pad(array[i], pad_width, 'wrap')
-            padded = np.roll(padded, randrange(max_length), axis=0)
-            x.append(padded)
-    return np.array(x)
+from utils import train_load, dev_load, test_load, EER, fixed_length
 
 class TrainDataset(Dataset):
     def __init__(self, path, parts, max_length):
@@ -67,13 +49,6 @@ class ValDataset(Dataset):
     def __getitem__(self, i):
         a, b = self.trials[i]
         return (self.X1[a], self.X2[b]), self.llabels[i]
-
-def load_data(parts, max_length):
-    print('Loading training dataset..')
-    train_dataset = TrainDataset('dataset', parts, max_length)
-    print('Loading validation dataset..')
-    val_dataset = ValDataset('dataset/dev.preprocessed.npz', max_length)
-    return train_dataset, val_dataset
 
 class Trainer:
     def __init__(self, train_loader, val_loader, name, net, optimizer, criterion, scheduler):
@@ -218,8 +193,8 @@ def main():
     init_fn = nn.init.kaiming_normal_
 
     # datasets and loaders
-    print('Loading datasets')
-    train_dataset, val_dataset = load_data(parts, max_length)
+    train_dataset = TrainDataset('dataset', parts, max_length)
+    val_dataset = ValDataset('dataset/dev.preprocessed.npz', max_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, sampler=RandomSampler(train_dataset))
     val_loader = DataLoader(val_dataset, batch_size=batch_size//2, sampler=RandomSampler(val_dataset))
 

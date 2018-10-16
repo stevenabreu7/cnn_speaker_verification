@@ -50,7 +50,7 @@ def dev_load(path):
     data = np.load(path, encoding='latin1')
     enrol, test = data['enrol'], data['test']
 
-    print("Loaded dev data.")
+    print("Loaded validation data.")
 
     return data['trials'], data['labels'], enrol, test
 
@@ -101,3 +101,21 @@ def densify_speaker_IDs(speakers):
     nspeakers = len(speaker2ID)
 
     return nspeakers
+
+def fixed_length(array, max_length):
+    x = []
+    for i in range(array.shape[0]):
+        if array[i].shape[0] >= max_length:
+            # too long, we slice
+            a = randrange(array[i].shape[0] - max_length + 1)
+            b = a + max_length
+            sliced = array[i][a:b, :]
+            sliced = np.roll(sliced, randrange(max_length), axis=0)
+            x.append(sliced)
+        else:
+            # too short, we pad
+            pad_width = ((0, max_length - array[i].shape[0]), (0,0))
+            padded = np.pad(array[i], pad_width, 'wrap')
+            padded = np.roll(padded, randrange(max_length), axis=0)
+            x.append(padded)
+    return np.array(x)
