@@ -171,6 +171,7 @@ def main():
     batch_size = 16
     parts = [1]
     epochs = 50
+    init_fn = nn.init.kaiming_normal_
 
     # datasets and loaders
     print('Loading datasets')
@@ -184,11 +185,11 @@ def main():
     # initialization
     for layer in net.children():
         if isinstance(layer, nn.Conv2d):
-            nn.init.kaiming_normal_(layer.weight)
+            init_fn(layer.weight)
         elif isinstance(layer, models.ResidualBlock):
             for llayer in layer.children():
                 if isinstance(llayer, nn.Conv2d):
-                    nn.init.kaiming_normal_(llayer.weight)
+                    init_fn(llayer.weight)
 
     # training parameters
     optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=0.01, dampening=0, lr=0.01, weight_decay=0.01)
