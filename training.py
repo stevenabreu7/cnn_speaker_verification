@@ -165,6 +165,9 @@ class Trainer:
                     batch_i, 
                     len(self.val_loader)
                 ), end='')
+
+                if batch_i > 100:
+                    break
             
             print('\rCompute EER', end='')
             # get all scores and labels
