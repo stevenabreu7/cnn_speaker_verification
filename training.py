@@ -196,7 +196,7 @@ class Trainer:
             epoch_scores = np.concatenate(epoch_scores, axis=0)
 
             # compute the EER
-            eer, tresh = EER(self.val_loader.labels, similarity_scores)
+            eer, tresh = EER(self.val_loader.dataset.labels, similarity_scores)
 
             print('\rValid {:3} EER {:7.4f} Tresh {:7.4f}'.format(
                 epoch + 1,
