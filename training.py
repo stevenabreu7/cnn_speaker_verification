@@ -180,15 +180,16 @@ def main():
 
     # model
     net = models.Resnet(train_dataset._nspeak, alpha=16, frames=max_length)
-
-    print(net)
-    print(net.children())
     
     # initialization
     for layer in net.children():
-        print(type(layer))
         if isinstance(layer, nn.Conv2d):
             nn.init.kaiming_normal_(layer.weight)
+        elif isinstance(layer, models.ResidualBlock):
+            print(layer)
+            print(layer.children())
+            for llayer in layer:
+                nn.init.kaiming_normal_(llayer.weight)
 
     # training parameters
     optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=0.01, dampening=0, lr=0.01, weight_decay=0.01)
