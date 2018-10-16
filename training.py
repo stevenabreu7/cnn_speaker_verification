@@ -58,7 +58,6 @@ class ValDataset(Dataset):
         self.labels = labels
         self.X1 = torch.Tensor(self.X1)
         self.X2 = torch.Tensor(self.X2)
-        self.labels = torch.Tensor(self.labels)
 
     def __len__(self):
         return self.trials.shape[0]
