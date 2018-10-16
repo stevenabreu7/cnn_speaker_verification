@@ -159,6 +159,7 @@ class Trainer:
                 # compute the similarity score
                 similarity_scores = nn.functional.cosine_similarity(batch_output_a, batch_output_b, dim=1)
                 epoch_scores.append(similarity_scores.cpu().detach().numpy())
+                print(similarity_scores.shape)
 
                 print('\rVal {:04}/{:04}'.format(
                     batch_i, 
