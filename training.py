@@ -139,6 +139,13 @@ class Trainer:
                 train_loss
             ))
 
+            # save model for this epoch
+            torch.save(self.net, 'models/{}_{}'.format(self.name, epoch))
+
+            continue
+            # if epoch % 10 != 0 or epoch == 0:
+            #     continue
+
             epoch_scores = []
 
             # validation
@@ -165,21 +172,11 @@ class Trainer:
                     len(self.val_loader)
                 ), end='')
 
-                if batch_i > 20:
-                    break
-            
-            print('Batches:', batch_output_a.shape, batch_output_b.shape)
-            print('Score:', epoch_scores[-1].shape)
-
             print('\rCompute EER', end='')
             # get all scores and labels
             epoch_scores = np.concatenate(epoch_scores, axis=0)
 
             # compute the EER
-            print(self.val_loader.dataset.labels)
-            print(epoch_scores)
-            print(self.val_loader.dataset.labels.shape)
-            print(epoch_scores.shape)
             eer, tresh = EER(self.val_loader.dataset.labels, epoch_scores)
 
             print('\rValid {:3} EER {:7.4f} Tresh {:7.4f}'.format(
@@ -187,8 +184,6 @@ class Trainer:
                 eer, 
                 tresh
             ))
-            
-            torch.save(self.net, 'models/{}_{}'.format(self.name, epoch))
 
         # move network back to CPU if needed
         self.net = self.net.cpu() if self.gpu else self.net 
