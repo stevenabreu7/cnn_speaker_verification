@@ -186,6 +186,7 @@ def main():
     
     # initialization
     for layer in net.children():
+        print(type(layer))
         if isinstance(layer, nn.Conv2d):
             nn.init.kaiming_normal_(layer.weight)
 
