@@ -221,7 +221,7 @@ def main():
     print('Loading datasets')
     train_dataset, val_dataset = load_data(parts, max_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, sampler=RandomSampler(train_dataset))
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, sampler=RandomSampler(val_dataset))
+    val_loader = DataLoader(val_dataset, batch_size=batch_size/2, sampler=RandomSampler(val_dataset))
 
     # model
     net = models.Resnet(train_dataset._nspeak, alpha=16)
