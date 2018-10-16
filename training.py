@@ -174,9 +174,9 @@ class Trainer:
 
             # compute the EER
             print(self.val_loader.dataset.labels)
-            print(similarity_scores)
-            print(self.val_loader.dataset.shape)
-            print(similarity_scores.shape)
+            print(epoch_scores)
+            print(self.val_loader.dataset.labels.shape)
+            print(epoch_scores.shape)
             eer, tresh = EER(self.val_loader.dataset.labels, similarity_scores)
 
             print('\rValid {:3} EER {:7.4f} Tresh {:7.4f}'.format(
