@@ -144,7 +144,7 @@ class Trainer:
                 if batch_i % 10 == 0:
                     print('\rEpoch {:3} Progress {:7.2%} Accuracy {:7.2%} Loss {:7.4f}'.format(
                         epoch + 1, 
-                        batch_i * self.train_loader.batch_size / len(self.train_loader.dataset),
+                        (batch_i + 1) / len(self.train_loader),
                         train_correct / train_num,
                         train_loss / (batch_i + 1)
                     ), end='')
