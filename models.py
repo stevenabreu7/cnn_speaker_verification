@@ -112,8 +112,6 @@ class Resnet(nn.Module):
         x = torch.squeeze(x)
         x = F.normalize(x, p=2, dim=1)
         x *= self.ALPHA
-        # flatten
-        x = self.flatten(x)
         # fully connected layer
         x = self.final(x)
         return x
