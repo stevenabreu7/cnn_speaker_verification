@@ -180,7 +180,7 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=batch_size, sampler=RandomSampler(val_dataset))
 
     # model
-    net = models.Resnet(train_dataset._nspeak, alpha=16, frames=max_length)
+    net = models.Resnet(train_dataset._nspeak, alpha=16)
     
     # initialization
     for layer in net.children():
