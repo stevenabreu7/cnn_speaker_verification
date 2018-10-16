@@ -56,6 +56,9 @@ class ValDataset(Dataset):
         self.X1 = fixed_length(enrol, max_length)
         self.X2 = fixed_length(test, max_length)
         self.labels = labels
+        self.X1 = torch.Tensor(self.X1)
+        self.X2 = torch.Tensor(self.X2)
+        self.labels = torch.Tensor(self.labels)
 
     def __len__(self):
         return self.trials.shape[0]
@@ -161,6 +164,45 @@ class Trainer:
                 train_loss
             ))
 
+            epoch_scores = []
+
+            # validation
+            for batch_i, (batch_data, batch_labels) in enumerate(self.val_loader):
+
+                batch_data_a, batch_data_b = batch_data
+
+                batch_data_a = Variable(batch_data_a)
+                batch_data_b = Variable(batch_data_b)
+
+                batch_data_a = batch_data_a.cuda() if self.gpu else batch_data_a
+                batch_data_b = batch_data_b.cuda() if self.gpu else batch_data_b
+
+                # computing the speaker embeddings
+                batch_output_a = self.net(batch_data_a)
+                batch_output_b = self.net(batch_data_b)
+
+                # compute the similarity score
+                similarity_scores = nn.functional.cosine_similarity(batch_output_a, batch_output_b, dim=1)
+                epoch_scores.append(similarity_scores.cpu().detach().numpy())
+
+                print('\rVal {:04}/{:04}'.format(
+                    batch_i, 
+                    len(self.val_loader)
+                ), end='')
+            
+            print('\rCompute EER', end='')
+            # get all scores and labels
+            epoch_scores = np.concatenate(epoch_scores, axis=0)
+
+            # compute the EER
+            eer, tresh = EER(batch_labels, similarity_scores)
+
+            print('\rValid {:3} EER {:7.4f} Tresh {:7.4f}'.format(
+                epoch + 1,
+                eer, 
+                tresh
+            ))
+            
             torch.save(self.net, 'models/{}_{}'.format(self.name, epoch))
 
         # move network back to CPU if needed
