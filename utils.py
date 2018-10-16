@@ -3,6 +3,7 @@ from __future__ import print_function
 import os
 import numpy as np
 from tqdm import tqdm
+from random import randrange
 from scipy.optimize import brentq
 from scipy.interpolate import interp1d
 from sklearn.metrics import roc_curve

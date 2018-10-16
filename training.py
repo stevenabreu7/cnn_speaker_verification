@@ -6,7 +6,6 @@ import models
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
-from random import randrange
 from torch.utils.data import Dataset, DataLoader, RandomSampler
 from torch.autograd.variable import Variable
 
