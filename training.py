@@ -182,9 +182,10 @@ def main():
     net = models.Resnet(train_dataset._nspeak, alpha=16, frames=max_length)
 
     print(net)
+    print(net.children())
     
     # initialization
-    for layer in net:
+    for layer in net.children():
         if isinstance(layer, nn.Conv2d):
             nn.init.kaiming_normal_(layer.weight)
 
