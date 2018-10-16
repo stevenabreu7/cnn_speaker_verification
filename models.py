@@ -56,12 +56,10 @@ class Resnet(nn.Module):
     - Avg Pool, 6x6, across time
     - Length normalization (by L2 norm), then scaling
     """
-    def __init__(self, classes, alpha=16, frames=14000):
+    def __init__(self, classes, alpha=16):
         super(Resnet, self).__init__()
         # constants
-        self.CLASSES = classes
         self.ALPHA = alpha
-        self.FRAMES = frames
         # first layer
         self.conv1 = nn.Conv2d(1, 32, 5, stride=2, padding=0, bias=False)
         nn.init.kaiming_normal_(self.conv1.weight)
@@ -85,8 +83,7 @@ class Resnet(nn.Module):
         self.res4 = ResidualBlock(256)
         # final pooling and length normalizing
         self.pool = nn.AvgPool2d(kernel_size=(872, 1), stride=1)
-        self.flatten = Flatten()
-        self.final = nn.Linear(256, self.CLASSES, bias=True)
+        self.final = nn.Linear(256, classes, bias=True)
     
     def forward(self, x):
         x = x.unsqueeze(1)
