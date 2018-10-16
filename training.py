@@ -157,19 +157,20 @@ class Trainer:
                 batch_output_b = self.net(batch_data_b)
 
                 # compute the similarity score
-                similarity_scores = nn.functional.cosine_similarity(batch_output_a, batch_output_b, dim=0)
+                similarity_scores = nn.functional.cosine_similarity(batch_output_a, batch_output_b, dim=1)
                 epoch_scores.append(similarity_scores.cpu().detach().numpy())
-                print(batch_output_a.shape, batch_output_b.shape)
-                print(epoch_scores[-1].shape)
 
                 print('\rVal {:04}/{:04}'.format(
                     batch_i, 
                     len(self.val_loader)
                 ), end='')
 
-                if batch_i > 100:
+                if batch_i > 20:
                     break
             
+            print('Batches:', batch_output_a.shape, batch_output_b.shape)
+            print('Score:', epoch_scores[-1].shape)
+
             print('\rCompute EER', end='')
             # get all scores and labels
             epoch_scores = np.concatenate(epoch_scores, axis=0)
