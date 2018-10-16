@@ -180,6 +180,8 @@ def main():
 
     # model
     net = models.Resnet(train_dataset._nspeak, alpha=16, frames=max_length)
+
+    print(net)
     
     # initialization
     for layer in net:
