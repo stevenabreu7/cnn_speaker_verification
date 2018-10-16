@@ -19,7 +19,9 @@ def train_load(path, parts):
     features = []
     speakers = []
 
-    for p in tqdm(parts):
+    for i in range(len(parts)):
+        print('\rLoading part {:}/{:} of training data'.format(i+1, len(parts)))
+        p = parts[i]
         npz = np.load(os.path.join(path, str(p) + ".preprocessed.npz"), encoding='latin1')
 
         features.append(npz['feats'])
@@ -30,7 +32,7 @@ def train_load(path, parts):
 
     nspeakers = densify_speaker_IDs(speakers)
 
-    print("\nLoaded", len(features), "utterances from", nspeakers, "unique speakers.")
+    print("\rLoaded", len(features), "utterances from", nspeakers, "unique speakers.")
     return features, speakers, nspeakers
 
 
