@@ -186,10 +186,9 @@ def main():
         if isinstance(layer, nn.Conv2d):
             nn.init.kaiming_normal_(layer.weight)
         elif isinstance(layer, models.ResidualBlock):
-            print(layer)
-            print(layer.children())
-            for llayer in layer:
-                nn.init.kaiming_normal_(llayer.weight)
+            for llayer in layer.children():
+                if isinstance(llayer, nn.Conv2d):
+                    nn.init.kaiming_normal_(llayer.weight)
 
     # training parameters
     optimizer = torch.optim.SGD(net.parameters(), nesterov=True, momentum=0.01, dampening=0, lr=0.01, weight_decay=0.01)
