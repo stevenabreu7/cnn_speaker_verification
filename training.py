@@ -263,7 +263,7 @@ def save_model_info(args):
     info += 'Learning rate: {}\n'.format(args.lr)
     info += 'Weight decay:  {}\n'.format(args.wdecay)
     info += 'Momentum:      {}\n'.format(args.momentum)
-    info += 'Existing:      {}'.format(args.existing)
+    info += 'Existing:      {}\n'.format(args.existing)
     # make sure the model doesn't exist already
     if os.path.exists('logs/{}_info.txt'.format(args.name)):
         raise Exception('Model log file already exists. Choose a different name.')
