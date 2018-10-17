@@ -142,7 +142,7 @@ class Trainer:
             ))
 
             # save summary for this epoch to file
-            with open('models/{}_info.txt', 'a') as f:
+            with open('models/{}_info.txt'.format(self.name), 'a') as f:
                 f.write('Epoch {:3} Progress {:7.2%} Accuracy {:7.2%} Loss {:7.4f}\n'.format(
                 epoch + 1, 
                 1,
