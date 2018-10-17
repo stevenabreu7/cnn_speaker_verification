@@ -1,6 +1,7 @@
 """ Model
 This model assumes preprocessing to be done already.
 """
+import os
 import torch 
 import argparse
 import numpy as np
@@ -142,7 +143,7 @@ class Trainer:
             ))
 
             # save summary for this epoch to file
-            with open('models/{}_info.txt'.format(self.name), 'a') as f:
+            with open('logs/{}_info.txt'.format(self.name), 'a') as f:
                 f.write('Epoch {:3} Progress {:7.2%} Accuracy {:7.2%} Loss {:7.4f}\n'.format(
                 epoch + 1, 
                 1,
@@ -259,7 +260,11 @@ def save_model_info(args):
     info += 'Weight decay:  {}\n'.format(args.wdecay)
     info += 'Momentum:      {}\n'.format(args.momentum)
     info += 'Existing:      {}'.format(args.existing)
-    with open('models/{}_info.txt'.format(args.name), 'w') as f:
+    # make sure the model doesn't exist already
+    if os.path.exists('logs/{}_info.txt'.format(args.name)):
+        raise Exception('Model log file already exists. Choose a different name.')
+    # write model information to file
+    with open('logs/{}_info.txt'.format(args.name), 'w') as f:
         f.write(info)
 
 def main():
