@@ -154,7 +154,7 @@ class Trainer:
             # save model for this epoch
             torch.save(self.net, 'models/{}_{}'.format(self.name, epoch))
 
-            if not self.validate or epoch == 0 or epoch % 10 != 0:
+            if not self.val_loader or epoch == 0 or epoch % 10 != 0:
                 continue
 
             epoch_scores = []
@@ -228,6 +228,10 @@ def parse_arguments():
         help='how many parts of the training data to use (1-6).')
     # learning arguments
     parser.add_argument(
+        '--val',
+        action='store_true',
+        help='do validation')
+    parser.add_argument(
         '--epochs',
         type=int,
         default=50,
@@ -283,6 +287,7 @@ def main():
     parts = list(range(1, args.parts+1))
     
     # learning parameters
+    val = args.val
     epochs = args.epochs
     lr = args.lr
     wdecay = args.wdecay
@@ -293,9 +298,12 @@ def main():
 
     # datasets and loaders
     train_dataset = TrainDataset('dataset', parts, max_length)
-    val_dataset = ValDataset('dataset/dev.preprocessed.npz', max_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, sampler=RandomSampler(train_dataset))
-    val_loader = DataLoader(val_dataset, batch_size=batch_size//2, sampler=RandomSampler(val_dataset))
+    if val:
+        val_dataset = ValDataset('dataset/dev.preprocessed.npz', max_length)
+        val_loader = DataLoader(val_dataset, batch_size=batch_size//2, sampler=RandomSampler(val_dataset))
+    else:
+        val_loader = None
 
     # model
     if args.existing:
