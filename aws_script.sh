@@ -1,3 +1,5 @@
+git clone https://github.com/stevenabreu7/cnn_speaker_verification.git
+cd cnn_speaker_verification
 pip install awscli
 awscli configure
 mkdir dataset
