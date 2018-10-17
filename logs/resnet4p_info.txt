@@ -1,0 +1,9 @@
+Model name:    resnet4p
+Max length:    14000
+Batch size:    16
+Parts used:    5
+Epochs:        70
+Learning rate: 0.01
+Weight decay:  0.01
+Momentum:      0.01
+Existing:      None
