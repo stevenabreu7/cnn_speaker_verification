@@ -15,7 +15,7 @@ class TestDataset(Dataset):
         self._len = len(trials)
         self.trials = trials
         self.enrol = fixed_length(enrol, max_length)
-        self.test = fixed_length(test, fixed_length)
+        self.test = fixed_length(test, max_length)
         self.enrol = torch.Tensor(self.enrol)
         self.test = torch.Tensor(self.test)
     
