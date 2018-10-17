@@ -1,3 +1,4 @@
+import os
 import torch 
 import argparse
 import numpy as np
@@ -28,13 +29,12 @@ class TestDataset(Dataset):
 
 # parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('filename', help='Path to the model')
-parser.add_argument('modelname', help='Name of the model')
+parser.add_argument('filename', help='Name of the model file, assuming it to be in the models directory.')
 args = parser.parse_args()
 
 # load the model
 print('\rLoading model', end='')
-net = torch.load(args.filename)
+net = torch.load('models/{}'.format(args.filename))
 net = net.cpu()
 
 # load data
@@ -69,4 +69,4 @@ for batch_i, (batch_enrol, batch_test) in enumerate(test_loader):
 
 scores = np.concatenate(scores)
 print('Score array with shape:', scores.shape)
-np.save('predictions/{}_pred.npy'.format(args.modelname), scores)
+np.save('predictions/{}.npy'.format(args.filename), scores)
