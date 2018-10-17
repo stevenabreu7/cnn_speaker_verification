@@ -29,6 +29,7 @@ class TestDataset(Dataset):
 # parse arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('filename', help='Path to the model')
+parser.add_argument('modelname', help='Name of the model')
 args = parser.parse_args()
 
 # load the model
@@ -68,4 +69,4 @@ for batch_i, (batch_enrol, batch_test) in enumerate(test_loader):
 
 scores = np.concatenate(scores)
 print('Score array with shape:', scores.shape)
-np.save('pred_scores', scores)
+np.save('predictions/{}_pred.npy'.format(args.modelname), scores)
