@@ -31,4 +31,4 @@ cd ..
 mkdir models
 source deactivate
 source activate pytorch_p36
-python training.py resnet4p --maxlen 14000 --bsize 16 --parts 6 --epochs 50
+python training.py resnet_full --maxlen 14000 --bsize 16 --parts 6 --epochs 50
