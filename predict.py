@@ -37,7 +37,7 @@ net = torch.load(args.filename)
 net = net.cpu()
 
 # load data
-print('\rLoading test data', end='')
+print('\rLoading test data\r', end='')
 test_dataset = TestDataset('dataset/test.preprocessed.npz', max_length)
 test_loader = DataLoader(test_dataset, batch_size=8)
 
