@@ -7,3 +7,31 @@ Learning rate: 0.01
 Weight decay:  0.01
 Momentum:      0.01
 Existing:      None
+Epoch   1 Progress 100.00% Accuracy   0.35% Loss  6.6962
+Epoch   2 Progress 100.00% Accuracy   0.37% Loss  6.5664
+Epoch   3 Progress 100.00% Accuracy   1.13% Loss  6.4519
+Epoch   4 Progress 100.00% Accuracy   4.49% Loss  5.9178
+Epoch   5 Progress 100.00% Accuracy  12.29% Loss  5.2238
+Epoch   6 Progress 100.00% Accuracy  21.63% Loss  4.6111
+Epoch   7 Progress 100.00% Accuracy  30.93% Loss  4.0961
+Epoch   8 Progress 100.00% Accuracy  38.88% Loss  3.6542
+Epoch   9 Progress 100.00% Accuracy  48.52% Loss  3.2731
+Epoch  10 Progress 100.00% Accuracy  55.35% Loss  2.9472
+Epoch  11 Progress 100.00% Accuracy  62.15% Loss  2.6672
+Epoch  12 Progress 100.00% Accuracy  67.84% Loss  2.4309
+Epoch  13 Progress 100.00% Accuracy  72.02% Loss  2.2242
+Epoch  14 Progress 100.00% Accuracy  75.33% Loss  2.0501
+Epoch  15 Progress 100.00% Accuracy  79.00% Loss  1.9002
+Epoch  16 Progress 100.00% Accuracy  81.28% Loss  1.7715
+Epoch  17 Progress 100.00% Accuracy  83.20% Loss  1.6586
+Epoch  18 Progress 100.00% Accuracy  84.74% Loss  1.5667
+Epoch  19 Progress 100.00% Accuracy  86.09% Loss  1.4781
+Epoch  20 Progress 100.00% Accuracy  87.31% Loss  1.4068
+Epoch  21 Progress 100.00% Accuracy  88.15% Loss  1.3459
+Epoch  22 Progress 100.00% Accuracy  89.14% Loss  1.2888
+Epoch  23 Progress 100.00% Accuracy  89.88% Loss  1.2421
+Epoch  24 Progress 100.00% Accuracy  90.32% Loss  1.1970
+Epoch  25 Progress 100.00% Accuracy  91.02% Loss  1.1583
+Epoch  26 Progress 100.00% Accuracy  91.31% Loss  1.1233
+Epoch  27 Progress 100.00% Accuracy  91.99% Loss  1.0912
+Epoch  28 Progress 100.00% Accuracy  92.13% Loss  1.0649
